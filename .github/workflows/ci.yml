@@ -203,3 +203,10 @@ jobs:
           ./scripts/create-release.sh \
             "${TALOS_VERSION}" \
             "${{ steps.arches.outputs.arches }}"
+
+  mirror-noop:
+    name: Mirror (no-op)
+    runs-on: ubuntu-latest
+    if: github.repository != 'Interested-Deving-1896/talos-incus'
+    steps:
+      - run: echo "Mirror repo — build runs on source only."
