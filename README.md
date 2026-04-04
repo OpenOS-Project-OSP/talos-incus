@@ -13,17 +13,17 @@ This repository automatically converts [Talos OS](https://www.talos.dev/) disk i
 ---
 ## What This Repository Does
 
-This repository sets up a simplestreams server that distributes Talos OS images for Incus. It automatically converts Talos releases into Incus-compatible VM images, signs them with cosign, and serves them via a Cloudflare Worker at `images.windsorcli.dev`.
+This repository sets up a simplestreams server that distributes Talos OS images for Incus. It automatically converts Talos releases into Incus-compatible VM images, signs them with cosign, and serves them via a Cloudflare Worker at `images.interested-deving-1896.dev`.
 
 > **Missing a version you need?**
 >
-> If there is a Talos OS version you want, but it isn't available through this repository or `images.windsorcli.dev`, please [file an issue](https://github.com/windsorcli/talos-incus/issues). Missing image versions can be built and published quickly upon request.
+> If there is a Talos OS version you want, but it isn't available through this repository or `images.interested-deving-1896.dev`, please [file an issue](https://github.com/Interested-Deving-1896/talos-incus/issues). Missing image versions can be built and published quickly upon request.
 
 ## Usage
 
 ```bash
 # Use simplestreams remote (recommended)
-incus remote add windsor https://images.windsorcli.dev --protocol simplestreams
+incus remote add talos-incus https://images.interested-deving-1896.dev --protocol simplestreams
 incus image list windsor:
 incus launch windsor:talos/v1.12.0/amd64 my-instance
 ```
@@ -34,8 +34,8 @@ If you are using the Incus Terraform provider, you can add remotes in the `provi
 # Configure Incus provider with remotes for image pulls
 provider "incus" {
   remote {
-    name     = "windsor"
-    address  = "https://images.windsorcli.dev"
+    name     = "talos-incus"
+    address  = "https://images.interested-deving-1896.dev"
     protocol = "simplestreams"
     public   = true
   }
@@ -45,7 +45,7 @@ resource "incus_instance" "talos_controller" {
   name        = "talos-controller"
   description = "Talos control plane node"
   type        = "virtual-machine"
-  image       = "windsor:talos/v1.12.0/arm64"
+  image       = "talos-incus:talos/v1.12.0/arm64"
   ...
 }
 ```
@@ -61,7 +61,7 @@ This repository automatically builds Incus images directly from [Talos OS releas
 
 ### Cloudflare Worker Proxy
 
-Incus requires specific HTTP headers (`Incus-Image-Hash`, `Incus-Image-URL`) when importing images from URLs. Since GitHub Releases doesn't provide these headers, we use a Cloudflare Worker at `images.windsorcli.dev` that:
+Incus requires specific HTTP headers (`Incus-Image-Hash`, `Incus-Image-URL`) when importing images from URLs. Since GitHub Releases doesn't provide these headers, we use a Cloudflare Worker at `images.interested-deving-1896.dev` that:
 
 - Proxies requests to GitHub Releases
 - Looks up pre-calculated SHA256 hashes
@@ -91,13 +91,13 @@ Releases are signed with [cosign](https://github.com/sigstore/cosign) using OIDC
    ```bash
    cosign verify-blob \
      --bundle talos-amd64-incus.tar.xz.bundle \
-     --certificate-identity-regexp '^https://github.com/windsorcli/talos-incus' \
+     --certificate-identity-regexp '^https://github.com/Interested-Deving-1896/talos-incus' \
      --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
      talos-amd64-incus.tar.xz
    
    cosign verify-blob \
      --bundle talos-arm64-incus.tar.xz.bundle \
-     --certificate-identity-regexp '^https://github.com/windsorcli/talos-incus' \
+     --certificate-identity-regexp '^https://github.com/Interested-Deving-1896/talos-incus' \
      --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
      talos-arm64-incus.tar.xz
    ```
@@ -106,13 +106,13 @@ Releases are signed with [cosign](https://github.com/sigstore/cosign) using OIDC
    ```bash
    cosign verify-blob \
      --bundle talos-amd64.qcow2.bundle \
-     --certificate-identity-regexp '^https://github.com/windsorcli/talos-incus' \
+     --certificate-identity-regexp '^https://github.com/Interested-Deving-1896/talos-incus' \
      --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
      talos-amd64.qcow2
    
    cosign verify-blob \
      --bundle talos-arm64.qcow2.bundle \
-     --certificate-identity-regexp '^https://github.com/windsorcli/talos-incus' \
+     --certificate-identity-regexp '^https://github.com/Interested-Deving-1896/talos-incus' \
      --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
      talos-arm64.qcow2
    ```
